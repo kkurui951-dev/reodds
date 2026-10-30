@@ -40,6 +40,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 header{background:rgba(10,10,26,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
 header h1{font-size:1.3rem;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-actions{display:flex;gap:10px;align-items:center}
 .hdr-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s;position:relative}
 .hdr-btn:hover{border-color:var(--gold);color:var(--gold)}
 .cart-badge{position:absolute;top:-6px;right:-6px;background:var(--gold);color:#000;font-size:.7rem;font-weight:800;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
@@ -59,6 +60,16 @@ main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
 .odds-row .price{color:var(--gold);font-weight:700;font-size:.9rem}
 .add-btn{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
 .add-btn:hover{transform:scale(1.05);box-shadow:0 2px 12px rgba(124,58,237,.4)}
+
+/* Auth */
+.auth-box{max-width:420px;margin:40px auto;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:32px;position:relative;overflow:hidden}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--cyan))}
+.auth-box h2{color:var(--gold);margin-bottom:20px;font-size:1.4rem;text-align:center}
+.auth-switch{text-align:center;margin-top:16px;font-size:.85rem;color:var(--muted)}
+.auth-switch a{color:var(--cyan);cursor:pointer;text-decoration:none;font-weight:600}
+.msg{padding:12px 16px;border-radius:10px;margin-top:12px;font-size:.85rem;display:none}
+.msg.error{display:block;background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
+.msg.success{display:block;background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green)}
 
 .cart-item{display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,.02);border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
 .cart-item .info{flex:1}
@@ -119,9 +130,6 @@ main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
 .error-card .sc-title{font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
 .error-card .sc-value{font-size:1rem;font-weight:700;color:var(--red)}
 
-.msg{padding:12px 16px;border-radius:10px;margin-top:12px;font-size:.85rem;display:none}
-.msg.error{display:block;background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
-
 footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:40px}
 @media(max-width:600px){.hero h1{font-size:2rem}.hero-logo{font-size:2.5rem}.cat-grid{grid-template-columns:1fr}header h1{font-size:1.1rem}.checkout-box{padding:20px}}
 </style>
@@ -151,12 +159,14 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
 
 <header id="appHeader" style="display:none">
   <h1>⚡ Zedicius Quru</h1>
-  <div style="display:flex;gap:10px">
+  <div class="hdr-actions">
     <button class="hdr-btn" onclick="showPage('cart')">🛒 Cart<span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
+    <button class="hdr-btn" id="authBtn" onclick="handleAuthClick()">Login</button>
   </div>
 </header>
 
 <main id="appMain" style="display:none">
+  <!-- SHOP -->
   <section id="shopPage" class="page active">
     <div class="cat-grid">
       <div class="cat-card">
@@ -184,19 +194,45 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
+  <!-- LOGIN -->
+  <section id="loginPage" class="page">
+    <div class="auth-box">
+      <h2>🔐 Login</h2>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="loginPhone" placeholder="07XXXXXXXX" maxlength="13"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Your password"></div>
+      <div id="loginMsg" class="msg"></div>
+      <button class="btn btn-primary" onclick="doLogin()">Login</button>
+      <div class="auth-switch">Don't have an account? <a onclick="showPage('register')">Register</a></div>
+    </div>
+  </section>
+
+  <!-- REGISTER -->
+  <section id="registerPage" class="page">
+    <div class="auth-box">
+      <h2>📝 Create Account</h2>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="regPhone" placeholder="07XXXXXXXX" maxlength="13"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Min 6 characters"></div>
+      <div class="form-group"><label>Confirm Password</label><input type="password" id="regPass2" placeholder="Repeat password"></div>
+      <div id="regMsg" class="msg"></div>
+      <button class="btn btn-primary" onclick="doRegister()">Create Account</button>
+      <div class="auth-switch">Already have an account? <a onclick="showPage('login')">Login</a></div>
+    </div>
+  </section>
+
+  <!-- CART -->
   <section id="cartPage" class="page">
     <h2 style="color:var(--gold);margin-bottom:20px">🛒 Your Cart</h2>
     <div id="cartItems"></div>
     <div class="cart-total" id="cartTotal" style="display:none"></div>
-    <button class="btn btn-purple" id="checkoutBtn" style="display:none" onclick="showPage('checkout')">Proceed to Checkout →</button>
+    <button class="btn btn-purple" id="checkoutBtn" style="display:none" onclick="goCheckout()">Proceed to Checkout →</button>
     <button class="btn btn-secondary" onclick="showPage('shop')">← Continue Shopping</button>
   </section>
 
+  <!-- CHECKOUT -->
   <section id="checkoutPage" class="page">
     <div class="checkout-box">
       <h2>💳 Checkout</h2>
       <div id="checkoutSummary" style="margin-bottom:16px;font-size:.9rem"></div>
-
       <div class="delivery-section">
         <h4>📲 Where should we send your odds?</h4>
         <label class="delivery-option" id="optSMS">
@@ -214,7 +250,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
           <input type="tel" id="deliveryNum" placeholder="07XXXXXXXX" maxlength="13">
         </div>
       </div>
-
       <div class="pay-instruction">
         <strong>💰 Make Payment</strong><br>
         Send <strong id="payAmount"></strong> via <strong>M-Pesa</strong> or <strong>Airtel Money</strong>:
@@ -231,6 +266,7 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
+  <!-- WAITING -->
   <section id="waitingPage" class="page">
     <div class="waiting">
       <div class="spinner-lg" id="waitSpinner"></div>
@@ -241,6 +277,7 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
+  <!-- CONFIRMED -->
   <section id="confirmedPage" class="page">
     <div class="result-page">
       <div class="result-icon">🎉</div>
@@ -259,6 +296,7 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
+  <!-- REJECTED -->
   <section id="rejectedPage" class="page">
     <div class="result-page">
       <div class="result-icon">❌</div>
@@ -279,10 +317,12 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
 
 <script>
 const PHONE = "0785639307";
+let token = localStorage.getItem('token') || null;
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let selectedDelivery = null;
 let ws = null, wsClosed = false, retryCount = 0, waitInterval = null, waitTimeout = null;
 
+// ── Hero ──
 function dismissHero() {
   document.getElementById('heroPage').style.display = 'none';
   document.getElementById('appHeader').style.display = 'flex';
@@ -291,6 +331,7 @@ function dismissHero() {
   showPage('shop');
 }
 
+// ── Navigation ──
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(name + 'Page').classList.add('active');
@@ -299,6 +340,56 @@ function showPage(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ── Auth ──
+function handleAuthClick() {
+  if (token) {
+    localStorage.removeItem('token');
+    token = null;
+    updateAuthUI();
+    showPage('shop');
+  } else {
+    showPage('login');
+  }
+}
+function updateAuthUI() {
+  document.getElementById('authBtn').textContent = token ? 'Logout' : 'Login';
+}
+
+async function doLogin() {
+  const phone = document.getElementById('loginPhone').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const msgEl = document.getElementById('loginMsg');
+  if (!phone || !pass) { msgEl.className = 'msg error'; msgEl.textContent = 'Fill in all fields'; return; }
+  try {
+    const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone, password: pass }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    token = data.token;
+    localStorage.setItem('token', token);
+    updateAuthUI();
+    showPage('shop');
+  } catch (e) { msgEl.className = 'msg error'; msgEl.textContent = e.message; }
+}
+
+async function doRegister() {
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  const msgEl = document.getElementById('regMsg');
+  if (!phone || !pass || !pass2) { msgEl.className = 'msg error'; msgEl.textContent = 'Fill in all fields'; return; }
+  if (pass !== pass2) { msgEl.className = 'msg error'; msgEl.textContent = 'Passwords do not match'; return; }
+  try {
+    const res = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone, password: pass }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    token = data.token;
+    localStorage.setItem('token', token);
+    updateAuthUI();
+    showPage('shop');
+  } catch (e) { msgEl.className = 'msg error'; msgEl.textContent = e.message; }
+}
+
+// ── Cart ──
 function addToCart(category, label, price) {
   cart.push({ category, label, price, id: Date.now() + Math.random() });
   saveCart(); updateCartBadge();
@@ -334,6 +425,12 @@ function renderCart() {
   btn.style.display = 'block';
 }
 
+// ── Checkout ──
+function goCheckout() {
+  if (!token) { showPage('login'); return; }
+  showPage('checkout');
+}
+
 function selectDelivery(method) {
   selectedDelivery = method;
   document.getElementById('optSMS').classList.toggle('selected', method === 'SMS');
@@ -344,8 +441,7 @@ function selectDelivery(method) {
 function renderCheckout() {
   const total = cart.reduce((s, i) => s + i.price, 0);
   const itemsText = cart.map(i => `${i.label} (${i.category})`).join(', ');
-  document.getElementById('checkoutSummary').innerHTML =
-    `<strong>Items:</strong> ${itemsText}<br><strong>Total to pay:</strong> KSh ${total.toLocaleString()}`;
+  document.getElementById('checkoutSummary').innerHTML = `<strong>Items:</strong> ${itemsText}<br><strong>Total to pay:</strong> KSh ${total.toLocaleString()}`;
   document.getElementById('payAmount').textContent = `KSh ${total.toLocaleString()}`;
   document.getElementById('paymentMsg').value = '';
   document.getElementById('checkoutMsg').className = 'msg';
@@ -372,12 +468,17 @@ async function submitOrder() {
   try {
     const res = await fetch('/api/create-order', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ items: cart, paymentMessage: msg, deliveryMethod: selectedDelivery, deliveryNumber: dNum })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-
+    if (!res.ok) {
+      if (res.status === 401) {
+        token = null; localStorage.removeItem('token'); updateAuthUI();
+        showPage('login'); return;
+      }
+      throw new Error(data.error);
+    }
     connectWS(data.orderId);
     startTimer();
     showPage('waiting');
@@ -387,6 +488,7 @@ async function submitOrder() {
   }
 }
 
+// ── WebSocket ──
 function connectWS(orderId) {
   if (wsClosed) return;
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -410,9 +512,7 @@ function connectWS(orderId) {
       showPage('rejected');
       wsClosed = true; ws.close();
     } else if (d.type === 'expired') {
-      stopTimer();
-      wsClosed = true; ws.close();
-      showPage('shop');
+      stopTimer(); wsClosed = true; ws.close(); showPage('shop');
     }
   };
   ws.onclose = () => {
@@ -439,24 +539,9 @@ function stopTimer() {
   if (waitTimeout) { clearTimeout(waitTimeout); waitTimeout = null; }
 }
 
-function cancelWait() {
-  wsClosed = true; stopTimer();
-  if (ws) { ws.close(); ws = null; }
-  showPage('checkout');
-}
-
-function goBackToCheckout() {
-  wsClosed = true; stopTimer();
-  if (ws) { ws.close(); ws = null; }
-  showPage('checkout');
-}
-
-function resetToShop() {
-  wsClosed = true; stopTimer();
-  if (ws) { ws.close(); ws = null; }
-  retryCount = 0;
-  showPage('shop');
-}
+function cancelWait() { wsClosed = true; stopTimer(); if (ws) { ws.close(); ws = null; } showPage('checkout'); }
+function goBackToCheckout() { wsClosed = true; stopTimer(); if (ws) { ws.close(); ws = null; } showPage('checkout'); }
+function resetToShop() { wsClosed = true; stopTimer(); if (ws) { ws.close(); ws = null; } retryCount = 0; showPage('shop'); }
 
 function copyPhone() {
   navigator.clipboard.writeText(PHONE).then(() => {
@@ -466,6 +551,7 @@ function copyPhone() {
   });
 }
 
+updateAuthUI();
 updateCartBadge();
 </script>
 </body>
