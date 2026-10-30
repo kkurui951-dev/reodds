@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: zedicius-tips
+    runtime: node
+    plan: starter
+    buildCommand: npm install --no-audit --no-fund
+    startCommand: npm start
+    healthCheckPath: /healthz
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_CHAT_ID
+        sync: false
+      - key: DATA_DIR
+        value: /var/data   
