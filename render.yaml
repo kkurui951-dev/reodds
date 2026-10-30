@@ -15,5 +15,7 @@ services:
         sync: false
       - key: ADMIN_CHAT_ID
         sync: false
+      - key: JWT_SECRET
+        generateValue: true
       - key: DATA_DIR
         value: /var/data   
