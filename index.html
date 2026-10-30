@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zedicius QuruFixed Tips</title>
+<style>
+:root{
+  --bg:#0a0a1a;--surface:#12122a;--card:#1a1a3e;
+  --gold:#f0c040;--gold-dark:#c99a20;
+  --purple:#7c3aed;--purple-light:#a78bfa;
+  --cyan:#06b6d4;--cyan-light:#67e8f9;
+  --green:#10b981;--red:#ef4444;--orange:#f59e0b;
+  --text:#f1f5f9;--muted:#94a3b8;--border:#2a2a5a;
+  --r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;overflow-x:hidden}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;position:relative;overflow:hidden;background:linear-gradient(160deg,#0a0a1a 0%,#1a0a2e 40%,#0a1a2e 100%)}
+.hero::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.15) 0%,transparent 70%);top:-200px;left:-200px;animation:float 8s ease-in-out infinite}
+.hero::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(240,192,64,.1) 0%,transparent 70%);bottom:-150px;right:-150px;animation:float 10s ease-in-out infinite reverse}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+.hero-content{position:relative;z-index:1;max-width:700px}
+.hero-logo{font-size:3.5rem;margin-bottom:8px;animation:glow 2s ease-in-out infinite alternate}
+@keyframes glow{from{filter:drop-shadow(0 0 10px rgba(240,192,64,.3))}to{filter:drop-shadow(0 0 25px rgba(240,192,64,.6))}}
+.hero h1{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--cyan-light),var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;animation:fadeUp .8s ease}
+.hero .subtitle{font-size:1.1rem;color:var(--muted);margin-bottom:24px;animation:fadeUp .8s ease .2s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-features{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;animation:fadeUp .8s ease .4s both}
+.hero-feat{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r);padding:12px 18px;font-size:.85rem;display:flex;align-items:center;gap:8px;backdrop-filter:blur(10px)}
+.hero-feat .icon{font-size:1.2rem}
+.stk-badge{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(240,192,64,.1));border:1px solid var(--orange);border-radius:30px;padding:10px 24px;font-size:.9rem;color:var(--orange);margin-bottom:32px;animation:fadeUp .8s ease .6s both,pulse-border 2s ease-in-out infinite}
+@keyframes pulse-border{0%,100%{border-color:var(--orange)}50%{border-color:var(--gold)}}
+.stk-badge .spinner-sm{width:16px;height:16px;border:2px solid rgba(245,158,11,.3);border-top-color:var(--orange);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-cta{animation:fadeUp .8s ease .8s both}
+.btn-hero{display:inline-flex;align-items:center;gap:10px;padding:16px 40px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;font-size:1.1rem;font-weight:800;border:none;border-radius:50px;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(240,192,64,.3)}
+.btn-hero:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(240,192,64,.5)}
+
+/* Header */
+header{background:rgba(10,10,26,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+header h1{font-size:1.3rem;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s;position:relative}
+.hdr-btn:hover{border-color:var(--gold);color:var(--gold)}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--gold);color:#000;font-size:.7rem;font-weight:800;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+/* Main */
+main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+.page{display:none}.page.active{display:block;animation:fadeUp .4s ease}
+
+/* Shop */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;transition:all .3s;position:relative;overflow:hidden}
+.cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--cyan));opacity:0;transition:opacity .3s}
+.cat-card:hover::before{opacity:1}
+.cat-card:hover{transform:translateY(-3px);border-color:var(--purple);box-shadow:0 8px 30px rgba(124,58,237,.15)}
+.cat-card h3{font-size:1rem;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.odds-row{display:flex;justify-content:space-between;align-items:center;padding:12px;margin-bottom:8px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid transparent;transition:all .2s}
+.odds-row:hover{background:rgba(240,192,64,.05);border-color:var(--gold)}
+.odds-row .label{font-weight:600;font-size:.9rem}
+.odds-row .price{color:var(--gold);font-weight:700;font-size:.9rem}
+.add-btn{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
+.add-btn:hover{transform:scale(1.05);box-shadow:0 2px 12px rgba(124,58,237,.4)}
+
+/* Cart */
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,.02);border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
+.cart-item .info{flex:1}
+.cart-item .info .name{font-weight:600;font-size:.95rem}
+.cart-item .info .cat{font-size:.8rem;color:var(--muted)}
+.cart-item .price{color:var(--gold);font-weight:700}
+.cart-item .remove-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:1.2rem;padding:4px 8px}
+.cart-total{background:linear-gradient(135deg,rgba(240,192,64,.08),rgba(124,58,237,.08));border:1px solid var(--gold);border-radius:10px;padding:16px;margin:16px 0;text-align:right;font-size:1.1rem}
+.cart-total strong{color:var(--gold)}
+.empty-cart{text-align:center;padding:40px;color:var(--muted)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 32px;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;width:100%;margin-top:12px}
+.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(240,192,64,.3)}
+.btn-purple{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(124,58,237,.3)}
+.btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Checkout */
+.checkout-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:600px;margin:0 auto;position:relative;overflow:hidden}
+.checkout-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--cyan))}
+.checkout-box h2{color:var(--gold);margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+.form-group input,.form-group textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.95rem;font-family:inherit;transition:all .2s}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,192,64,.1)}
+.form-group textarea{min-height:100px;resize:vertical}
+.pay-instruction{background:rgba(245,158,11,.08);border:1px solid var(--orange);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:.9rem;line-height:1.7}
+.pay-instruction .phone{font-size:1.3rem;font-weight:800;color:var(--orange);letter-spacing:1px;display:block;margin:6px 0}
+.copy-btn{background:var(--orange);color:#000;border:none;border-radius:6px;padding:3px 10px;font-size:.75rem;cursor:pointer;font-weight:700;margin-left:8px}
+
+/* Delivery */
+.delivery-section{margin:16px 0;padding:16px;background:rgba(6,182,212,.05);border:1px solid var(--cyan);border-radius:10px}
+.delivery-section h4{color:var(--cyan);margin-bottom:12px;font-size:.95rem}
+.delivery-option{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:8px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.delivery-option:hover{border-color:var(--cyan)}
+.delivery-option.selected{border-color:var(--cyan);background:rgba(6,182,212,.1)}
+.delivery-option input[type="radio"]{width:20px;height:20px;accent-color:var(--cyan)}
+.delivery-option .d-icon{font-size:1.5rem}
+.delivery-option .d-label{font-weight:600;font-size:.95rem}
+.delivery-option .d-desc{font-size:.8rem;color:var(--muted)}
+
+/* Waiting */
+.waiting{text-align:center;padding:50px 20px}
+.spinner-lg{display:inline-block;width:48px;height:48px;border:4px solid rgba(240,192,64,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+.waiting h3{color:var(--gold);margin-top:16px;font-size:1.2rem}
+.waiting p{color:var(--muted);font-size:.9rem;margin-top:8px}
+.waiting .timer{color:var(--orange);font-size:.85rem;margin-top:12px}
+
+/* Result pages */
+.result-page{text-align:center;padding:50px 20px;animation:fadeUp .5s ease}
+.result-icon{font-size:5rem;margin-bottom:20px;animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.result-page h2{font-size:1.8rem;margin-bottom:12px}
+.result-page p{color:var(--muted);font-size:1rem;margin-bottom:16px}
+.success-card{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(6,182,212,.1));border:2px solid var(--green);border-radius:var(--r);padding:28px;margin:24px auto;max-width:400px}
+.success-card .sc-title{font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.success-card .sc-value{font-size:1.1rem;font-weight:700;color:var(--green)}
+.error-card{background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(245,158,11,.1));border:2px solid var(--red);border-radius:var(--r);padding:28px;margin:24px auto;max-width:400px}
+.error-card .sc-title{font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.error-card .sc-value{font-size:1rem;font-weight:700;color:var(--red)}
+
+.msg{padding:12px 16px;border-radius:10px;margin-top:12px;font-size:.85rem;display:none}
+.msg.error{display:block;background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
+.msg.success{display:block;background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green)}
+
+footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:40px}
+@media(max-width:600px){.hero h1{font-size:2rem}.hero-logo{font-size:2.5rem}.cat-grid{grid-template-columns:1fr}header h1{font-size:1.1rem}.checkout-box{padding:20px}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section id="heroPage" class="hero">
+  <div class="hero-content">
+    <div class="hero-logo">⚡</div>
+    <h1>ZEDICIUS QURU<br>FIXED TIPS</h1>
+    <p class="subtitle">Premium Football Odds · 100% Legitimate · Trusted by Thousands</p>
+    <div class="hero-features">
+      <div class="hero-feat"><span class="icon">🏆</span> 1X2 Bets</div>
+      <div class="hero-feat"><span class="icon">⚽</span> Over/Under</div>
+      <div class="hero-feat"><span class="icon">🔥</span> GG/NGG</div>
+      <div class="hero-feat"><span class="icon">🐉</span> Monster Odds</div>
+    </div>
+    <div class="stk-badge">
+      <div class="spinner-sm"></div>
+      <span><strong>M-Pesa / Airtel STK Push</strong> is coming soon — hold on!</span>
+    </div>
+    <div class="hero-cta">
+      <button class="btn-hero" onclick="dismissHero()">🚀 Start Shopping</button>
+    </div>
+  </div>
+</section>
+
+<!-- APP -->
+<header id="appHeader" style="display:none">
+  <h1>⚡ Zedicius Quru</h1>
+  <div style="display:flex;gap:10px">
+    <button class="hdr-btn" onclick="showPage('cart')">🛒 Cart<span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
+  </div>
+</header>
+
+<main id="appMain" style="display:none">
+  <!-- SHOP -->
+  <section id="shopPage" class="page active">
+    <div class="cat-grid">
+      <div class="cat-card">
+        <h3>🏆 1X2 Bets</h3>
+        <div class="odds-row"><span class="label">20 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 999</span><button class="add-btn" onclick="addToCart('1X2 Bets','20 Odds',999)">+ Add</button></div></div>
+        <div class="odds-row"><span class="label">45 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 1,999</span><button class="add-btn" onclick="addToCart('1X2 Bets','45 Odds',1999)">+ Add</button></div></div>
+        <div class="odds-row"><span class="label">65 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 2,999</span><button class="add-btn" onclick="addToCart('1X2 Bets','65 Odds',2999)">+ Add</button></div></div>
+      </div>
+      <div class="cat-card">
+        <h3>⚽ Over / Under</h3>
+        <div class="odds-row"><span class="label">25 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 1,299</span><button class="add-btn" onclick="addToCart('Over/Under','25 Odds',1299)">+ Add</button></div></div>
+        <div class="odds-row"><span class="label">50 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 2,399</span><button class="add-btn" onclick="addToCart('Over/Under','50 Odds',2399)">+ Add</button></div></div>
+        <div class="odds-row"><span class="label">75 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 3,399</span><button class="add-btn" onclick="addToCart('Over/Under','75 Odds',3399)">+ Add</button></div></div>
+      </div>
+      <div class="cat-card">
+        <h3>🔥 GG / NGG</h3>
+        <div class="odds-row"><span class="label">10 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 799</span><button class="add-btn" onclick="addToCart('GG/NGG','10 Odds',799)">+ Add</button></div></div>
+        <div class="odds-row"><span class="label">23 Odds</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 1,099</span><button class="add-btn" onclick="addToCart('GG/NGG','23 Odds',1099)">+ Add</button></div></div>
+      </div>
+      <div class="cat-card">
+        <h3>🐉 Monster Odds / Correct Score</h3>
+        <div class="odds-row"><span class="label">2 Games · 178.652</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 5,999</span><button class="add-btn" onclick="addToCart('Monster Odds','2 Games 178.652',5999)">+ Add</button></div></div>
+        <div class="odds-row"><span class="label">3 Games · 379.22</span><div style="display:flex;align-items:center;gap:10px"><span class="price">KSh 6,999</span><button class="add-btn" onclick="addToCart('Monster Odds','3 Games 379.22',6999)">+ Add</button></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CART -->
+  <section id="cartPage" class="page">
+    <h2 style="color:var(--gold);margin-bottom:20px">🛒 Your Cart</h2>
+    <div id="cartItems"></div>
+    <div class="cart-total" id="cartTotal" style="display:none"></div>
+    <button class="btn btn-purple" id="checkoutBtn" style="display:none" onclick="showPage('checkout')">Proceed to Checkout →</button>
+    <button class="btn btn-secondary" onclick="showPage('shop')">← Continue Shopping</button>
+  </section>
+
+  <!-- CHECKOUT -->
+  <section id="checkoutPage" class="page">
+    <div class="checkout-box">
+      <h2>💳 Checkout</h2>
+      <div id="checkoutSummary" style="margin-bottom:16px;font-size:.9rem"></div>
+
+      <div class="delivery-section">
+        <h4>📲 Where should we send your odds?</h4>
+        <label class="delivery-option" id="optSMS">
+          <input type="radio" name="delivery" value="SMS" onchange="selectDelivery('SMS')">
+          <span class="d-icon">💬</span>
+          <div><div class="d-label">SMS</div><div class="d-desc">We'll text your odds to your number</div></div>
+        </label>
+        <label class="delivery-option" id="optWhatsApp">
+          <input type="radio" name="delivery" value="WhatsApp" onchange="selectDelivery('WhatsApp')">
+          <span class="d-icon">📱</span>
+          <div><div class="d-label">WhatsApp</div><div class="d-desc">We'll send your odds on WhatsApp</div></div>
+        </label>
+        <div class="form-group" id="deliveryNumGroup" style="margin-top:12px;display:none">
+          <label>Delivery Number</label>
+          <input type="tel" id="deliveryNum" placeholder="07XXXXXXXX" maxlength="13">
+        </div>
+      </div>
+
+      <div class="pay-instruction">
+        <strong>💰 Make Payment</strong><br>
+        Send <strong id="payAmount"></strong> via <strong>M-Pesa</strong> or <strong>Airtel Money</strong>:
+        <span class="phone">0785 639 307</span>
+        <button class="copy-btn" onclick="copyPhone()">📋 Copy</button>
+      </div>
+      <div class="form-group">
+        <label>Paste the Full Confirmation Message</label>
+        <textarea id="paymentMsg" placeholder="Paste the entire M-Pesa/Airtel SMS here..."></textarea>
+      </div>
+      <div id="checkoutMsg" class="msg"></div>
+      <button class="btn btn-primary" id="submitBtn" onclick="submitOrder()">✅ Place Order</button>
+      <button class="btn btn-secondary" onclick="showPage('cart')">← Back to Cart</button>
+    </div>
+  </section>
+
+  <!-- WAITING -->
+  <section id="waitingPage" class="page">
+    <div class="waiting">
+      <div class="spinner-lg" id="waitSpinner"></div>
+      <h3 id="waitTitle">Verifying Your Payment...</h3>
+      <p id="waitText">Our team is checking your payment.<br>Keep this page open — you'll see the result shortly.</p>
+      <div class="timer" id="waitTimer"></div>
+      <button class="btn btn-danger" onclick="cancelWait()" style="max-width:250px;margin:20px auto 0">✕ Cancel</button>
+    </div>
+  </section>
+
+  <!-- CONFIRMED -->
+  <section id="confirmedPage" class="page">
+    <div class="result-page">
+      <div class="result-icon">🎉</div>
+      <h2 style="color:var(--green)">Payment Confirmed!</h2>
+      <p>Your order is verified. Your odds are on the way!</p>
+      <div class="success-card">
+        <div class="sc-title">Delivery</div>
+        <div class="sc-value" id="confDelivery">—</div>
+      </div>
+      <div class="success-card" style="border-color:var(--cyan);background:linear-gradient(135deg,rgba(6,182,212,.1),rgba(124,58,237,.1))">
+        <div class="sc-title">Order ID</div>
+        <div class="sc-value" id="confOrderId" style="color:var(--cyan)">—</div>
+      </div>
+      <p style="margin-top:20px;font-size:.9rem">📲 You'll receive your odds via <strong id="confMethod">SMS</strong> to <strong id="confNumber">—</strong> within 5–15 minutes.</p>
+      <button class="btn btn-primary" onclick="resetToShop()" style="max-width:300px;margin:20px auto 0">🔄 Buy More Odds</button>
+    </div>
+  </section>
+
+  <!-- REJECTED -->
+  <section id="rejectedPage" class="page">
+    <div class="result-page">
+      <div class="result-icon">❌</div>
+      <h2 style="color:var(--red)">Payment Not Verified</h2>
+      <p>The payment message you submitted doesn't match. Please check and try again.</p>
+      <div class="error-card">
+        <div class="sc-title">Expected Amount</div>
+        <div class="sc-value" id="rejAmount">—</div>
+      </div>
+      <p style="margin-top:16px;font-size:.9rem">💡 Make sure you sent the <strong>exact amount</strong> to <strong>0785 639 307</strong> and pasted the <strong>full</strong> confirmation message.</p>
+      <button class="btn btn-primary" onclick="goBackToCheckout()" style="max-width:300px;margin:20px auto 0">🔄 Go Back to Checkout</button>
+      <button class="btn btn-secondary" onclick="resetToShop()" style="max-width:300px;margin:8px auto 0">← Back to Shop</button>
+    </div>
+  </section>
+</main>
+
+<footer id="appFooter" style="display:none">© 2026 Zedicius QuruFixed Tips · Premium Odds · M-Pesa / Airtel Money</footer>
+
+<script>
+const PHONE = "0785639307";
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+let selectedDelivery = null;
+let ws = null, wsClosed = false, retryCount = 0, waitInterval = null, waitTimeout = null;
+
+function dismissHero() {
+  document.getElementById('heroPage').style.display = 'none';
+  document.getElementById('appHeader').style.display = 'flex';
+  document.getElementById('appMain').style.display = 'block';
+  document.getElementById('appFooter').style.display = 'block';
+  showPage('shop');
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(name + 'Page').classList.add('active');
+  if (name === 'cart') renderCart();
+  if (name === 'checkout') renderCheckout();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Cart ──
+function addToCart(category, label, price) {
+  cart.push({ category, label, price, id: Date.now() + Math.random() });
+  saveCart(); updateCartBadge();
+}
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  saveCart(); updateCartBadge(); renderCart();
+}
+function saveCart() { localStorage.setItem('cart', JSON.stringify(cart)); }
+function updateCartBadge() {
+  const b = document.getElementById('cartBadge');
+  if (cart.length > 0) { b.style.display = 'flex'; b.textContent = cart.length; }
+  else b.style.display = 'none';
+}
+function renderCart() {
+  const c = document.getElementById('cartItems');
+  const t = document.getElementById('cartTotal');
+  const btn = document.getElementById('checkoutBtn');
+  if (cart.length === 0) {
+    c.innerHTML = '<div class="empty-cart">Your cart is empty.<br>Add some odds to get started!</div>';
+    t.style.display = 'none'; btn.style.display = 'none'; return;
+  }
+  c.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="info"><div class="name">${item.label}</div><div class="cat">${item.category}</div></div>
+      <span class="price">KSh ${item.price.toLocaleString()}</span>
+      <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
+    </div>
+  `).join('');
+  const total = cart.reduce((s, i) => s + i.price, 0);
+  t.style.display = 'block';
+  t.innerHTML = `Total: <strong>KSh ${total.toLocaleString()}</strong>`;
+  btn.style.display = 'block';
+}
+
+// ── Checkout ──
+function selectDelivery(method) {
+  selectedDelivery = method;
+  document.getElementById('optSMS').classList.toggle('selected', method === 'SMS');
+  document.getElementById('optWhatsApp').classList.toggle('selected', method === 'WhatsApp');
+  document.getElementById('deliveryNumGroup').style.display = 'block';
+}
+
+function renderCheckout() {
+  const total = cart.reduce((s, i) => s + i.price, 0);
+  const itemsText = cart.map(i => `${i.label} (${i.category})`).join(', ');
+  document.getElementById('checkoutSummary').innerHTML =
+    `<strong>Items:</strong> ${itemsText}<br><strong>Total to pay:</strong> KSh ${total.toLocaleString()}`;
+  document.getElementById('payAmount').textContent = `KSh ${total.toLocaleString()}`;
+  document.getElementById('paymentMsg').value = '';
+  document.getElementById('checkoutMsg').className = 'msg';
+  document.getElementById('checkoutMsg').textContent = '';
+  document.getElementById('deliveryNum').value = '';
+  selectedDelivery = null;
+  document.getElementById('optSMS').classList.remove('selected');
+  document.getElementById('optWhatsApp').classList.remove('selected');
+  document.getElementById('deliveryNumGroup').style.display = 'none';
+}
+
+async function submitOrder() {
+  const msg = document.getElementById('paymentMsg').value.trim();
+  const msgEl = document.getElementById('checkoutMsg');
+  const btn = document.getElementById('submitBtn');
+
+  if (!selectedDelivery) { msgEl.className = 'msg error'; msgEl.textContent = 'Select how you want to receive your odds (SMS or WhatsApp)'; return; }
+  const dNum = document.getElementById('deliveryNum').value.trim();
+  if (!dNum) { msgEl.className = 'msg error'; msgEl.textContent = 'Enter your delivery number'; return; }
+  if (!msg) { msgEl.className = 'msg error'; msgEl.textContent = 'Paste the payment confirmation message'; return; }
+
+  const total = cart.reduce((s, i) => s + i.price, 0);
+  const amountMatch = msg.match(/(?:KSh|KES|Sh|Ksh)\s*([\d,]+(?:\.\d+)?)/i);
+  let paid = amountMatch ? parseInt(amountMatch[1].replace(/,/g, '')) : null;
+  if (!paid) { const b = msg.match(/\b(\d{3,6})\b/); if (b) paid = parseInt(b[1]); }
+  if (paid !== null && paid < total) {
+    msgEl.className = 'msg error';
+    msgEl.textContent = `Payment KSh ${paid.toLocaleString()} < KSh ${total.toLocaleString()}. Top up and resubmit.`;
+    return;
+  }
+
+  btn.disabled = true; btn.innerHTML = '⏳ Placing Order...';
+
+  try {
+    const res = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: cart, paymentMessage: msg, deliveryMethod: selectedDelivery, deliveryNumber: dNum })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    connectWS(data.orderId);
+    startTimer();
+    showPage('waiting');
+  } catch (e) {
+    msgEl.className = 'msg error'; msgEl.textContent = e.message;
+    btn.disabled = false; btn.innerHTML = '✅ Place Order';
+  }
+}
+
+// ── WebSocket ──
+function connectWS(orderId) {
+  if (wsClosed) return;
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}/ws`);
+  ws.onopen = () => { if (!wsClosed) ws.send(JSON.stringify({ orderId })); };
+  ws.onmessage = (e) => {
+    if (wsClosed) return;
+    const d = JSON.parse(e.data);
+    if (d.type === 'confirmed') {
+      stopTimer();
+      document.getElementById('confOrderId').textContent = d.orderId;
+      document.getElementById('confDelivery').textContent = `${d.deliveryMethod} → ${d.deliveryNumber}`;
+      document.getElementById('confMethod').textContent = d.deliveryMethod;
+      document.getElementById('confNumber').textContent = d.deliveryNumber;
+      cart = []; saveCart(); updateCartBadge();
+      showPage('confirmed');
+      wsClosed = true; ws.close();
+    } else if (d.type === 'rejected') {
+      stopTimer();
+      document.getElementById('rejAmount').textContent = `KSh ${d.expectedAmount.toLocaleString()}`;
+      showPage('rejected');
+      wsClosed = true; ws.close();
+    } else if (d.type === 'expired') {
+      stopTimer();
+      wsClosed = true; ws.close();
+      showPage('shop');
+    }
+  };
+  ws.onclose = () => {
+    if (wsClosed) return;
+    if (document.getElementById('waitingPage').classList.contains('active')) {
+      retryCount++;
+      if (retryCount >= 5) { stopTimer(); showPage('shop'); return; }
+      setTimeout(() => { if (!wsClosed) connectWS(orderId); }, 3000 * Math.pow(2, retryCount - 1));
+    }
+  };
+  ws.onerror = () => {};
+}
+
+function startTimer() {
+  const start = Date.now();
+  waitInterval = setInterval(() => {
+    const s = Math.floor((Date.now() - start) / 1000);
+    document.getElementById('waitTimer').textContent = `Elapsed: ${Math.floor(s/60)}m ${s%60}s`;
+  }, 1000);
+  waitTimeout = setTimeout(() => { stopTimer(); showPage('shop'); }, 10 * 60 * 1000);
+}
+function stopTimer() {
+  if (waitInterval) { clearInterval(waitInterval); waitInterval = null; }
+  if (waitTimeout) { clearTimeout(waitTimeout); waitTimeout = null; }
+}
+
+function cancelWait() {
+  wsClosed = true; stopTimer();
+  if (ws) { ws.close(); ws = null; }
+  showPage('checkout');
+}
+
+function goBackToCheckout() {
+  wsClosed = true; stopTimer();
+  if (ws) { ws.close(); ws = null; }
+  showPage('checkout');
+}
+
+function resetToShop() {
+  wsClosed = true; stopTimer();
+  if (ws) { ws.close(); ws = null; }
+  retryCount = 0;
+  showPage('shop');
+}
+
+function copyPhone() {
+  navigator.clipboard.writeText(PHONE).then(() => {
+    const b = document.querySelector('.copy-btn');
+    b.textContent = '✓ Copied!';
+    setTimeout(() => b.textContent = '📋 Copy', 2000);
+  });
+}
+
+updateCartBadge();
+</script>
+</body>
+</html>   
