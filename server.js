@@ -15,7 +15,6 @@ if (!BOT_TOKEN || !ADMIN_CHAT_ID || isNaN(ADMIN_CHAT_ID)) {
   process.exit(1);
 }
 
-// ── Database ──
 const dbPath = path.join(DATA_DIR, 'zedicius.db');
 const db = new Database(dbPath);
 db.pragma('journal_mode = WAL');
@@ -36,12 +35,10 @@ db.exec(`
 
 console.log(`📦 DB: ${dbPath}`);
 
-// ── Express ──
 const app = express();
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(__dirname));
 
-// ── WebSocket ──
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' });
 const activeOrders = new Map();
@@ -87,7 +84,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-// ── API: Create Order (NO AUTH needed) ──
 app.post('/api/create-order', (req, res) => {
   const { items, paymentMessage, deliveryMethod, deliveryNumber } = req.body;
   if (!items || !Array.isArray(items) || items.length === 0) return res.status(400).json({ error: 'Cart is empty' });
@@ -105,7 +101,6 @@ app.post('/api/create-order', (req, res) => {
 
   activeOrders.set(orderId, { orderId, items, total, deliveryMethod, deliveryNumber, ws: null, createdAt: Date.now() });
 
-  // ── Telegram with TWO BUTTONS ──
   const itemsText = items.map(i => `  • ${i.label} (${i.category}) — KSh ${i.price}`).join('\n');
   const adminMsg =
     `🔔 NEW ORDER: ${orderId}\n` +
@@ -133,7 +128,6 @@ app.post('/api/create-order', (req, res) => {
   res.json({ orderId, total });
 });
 
-// ── Telegram Bot ──
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
 bot.on('callback_query', (query) => {
@@ -148,7 +142,6 @@ bot.on('callback_query', (query) => {
   }
 
   if (action === 'correct') {
-    // Tell user: payment confirmed, odds coming via SMS/WhatsApp
     if (order.ws && order.ws.readyState === WebSocket.OPEN) {
       order.ws.send(JSON.stringify({
         type: 'confirmed',
@@ -165,7 +158,6 @@ bot.on('callback_query', (query) => {
     ).catch(() => {});
     bot.answerCallbackQuery(query.id, { text: '✅ Confirmed' });
   } else if (action === 'wrong') {
-    // Tell user: wrong payment, go back
     if (order.ws && order.ws.readyState === WebSocket.OPEN) {
       order.ws.send(JSON.stringify({
         type: 'rejected',
@@ -195,19 +187,14 @@ bot.on('message', (msg) => {
   }
 });
 
-// ── Health ──
 app.get('/healthz', (_req, res) => res.sendStatus(200));
-
-// ── SPA fallback ──
 app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// ── Start ──
 server.listen(PORT, () => {
   console.log(`✅ Zedicius QuruFixed Tips running on port ${PORT}`);
   console.log(`🤖 Bot polling (admin: ${ADMIN_CHAT_ID})`);
 });
 
-// ── Shutdown ──
 process.on('SIGTERM', () => {
   console.log('SIGTERM. Shutting down...');
   wss.clients.forEach(ws => ws.close(1001));
