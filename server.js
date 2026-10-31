@@ -3,7 +3,7 @@ const http = require('http');
 const { WebSocketServer, WebSocket } = require('ws');
 const TelegramBot = require('node-telegram-bot-api');
 const Database = require('better-sqlite3');
-const bcrypt = require('bcryptjs');
+const bcrypt = ('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 
