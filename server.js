@@ -4,6 +4,7 @@ const { WebSocketServer, WebSocket } = require('ws');
 const TelegramBot = require('node-telegram-bot-api');
 const Database = require('better-sqlite3');
 const path = require('path');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -20,9 +21,22 @@ const db = new Database(dbPath);
 db.pragma('journal_mode = WAL');
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    phone TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS sessions (
+    token TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
   CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     order_ref TEXT UNIQUE NOT NULL,
+    user_id INTEGER,
     items TEXT NOT NULL,
     total INTEGER NOT NULL,
     delivery_method TEXT,
@@ -39,6 +53,58 @@ const app = express();
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(__dirname));
 
+// ── Simple auth middleware ──
+function authRequired(req, res, next) {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'Please login first.' });
+  const session = db.prepare('SELECT * FROM sessions WHERE token = ?').get(token);
+  if (!session) return res.status(401).json({ error: 'Session expired. Please login again.' });
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(session.user_id);
+  if (!user) return res.status(401).json({ error: 'User not found.' });
+  req.userId = user.id;
+  req.phone = user.phone;
+  next();
+}
+
+// ── Register ──
+app.post('/api/register', (req, res) => {
+  const { phone, password } = req.body;
+  if (!phone || !password) return res.status(400).json({ error: 'Phone and password required' });
+  const cleanPhone = phone.replace(/\s/g, '');
+  if (!/^(\+?254|0)?7\d{8}$/.test(cleanPhone) && !/^(\+?254|0)?1\d{8}$/.test(cleanPhone)) {
+    return res.status(400).json({ error: 'Invalid phone. Use: 07XXXXXXXX' });
+  }
+  if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
+
+  const existing = db.prepare('SELECT id FROM users WHERE phone = ?').get(cleanPhone);
+  if (existing) return res.status(409).json({ error: 'Phone already registered. Try logging in.' });
+
+  db.prepare('INSERT INTO users (phone, password) VALUES (?, ?)').run(cleanPhone, password);
+  const user = db.prepare('SELECT * FROM users WHERE phone = ?').get(cleanPhone);
+
+  const token = crypto.randomBytes(32).toString('hex');
+  db.prepare('INSERT INTO sessions (token, user_id) VALUES (?, ?)').run(token, user.id);
+
+  res.json({ token, phone: cleanPhone });
+});
+
+// ── Login ──
+app.post('/api/login', (req, res) => {
+  const { phone, password } = req.body;
+  if (!phone || !password) return res.status(400).json({ error: 'Phone and password required' });
+  const cleanPhone = phone.replace(/\s/g, '');
+
+  const user = db.prepare('SELECT * FROM users WHERE phone = ?').get(cleanPhone);
+  if (!user) return res.status(401).json({ error: 'Invalid phone or password' });
+  if (user.password !== password) return res.status(401).json({ error: 'Invalid phone or password' });
+
+  const token = crypto.randomBytes(32).toString('hex');
+  db.prepare('INSERT INTO sessions (token, user_id) VALUES (?, ?)').run(token, user.id);
+
+  res.json({ token, phone: user.phone });
+});
+
+// ── WebSocket ──
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' });
 const activeOrders = new Map();
@@ -84,7 +150,8 @@ wss.on('connection', (ws) => {
   });
 });
 
-app.post('/api/create-order', (req, res) => {
+// ── Create Order (requires login) ──
+app.post('/api/create-order', authRequired, (req, res) => {
   const { items, paymentMessage, deliveryMethod, deliveryNumber } = req.body;
   if (!items || !Array.isArray(items) || items.length === 0) return res.status(400).json({ error: 'Cart is empty' });
   if (!paymentMessage) return res.status(400).json({ error: 'Payment message required' });
@@ -96,15 +163,16 @@ app.post('/api/create-order', (req, res) => {
   let orderId = '';
   for (let i = 0; i < 6; i++) orderId += chars[Math.floor(Math.random() * chars.length)];
 
-  db.prepare('INSERT INTO orders (order_ref, items, total, delivery_method, delivery_number, payment_message, status) VALUES (?, ?, ?, ?, ?, ?, ?)')
-    .run(orderId, JSON.stringify(items), total, deliveryMethod, deliveryNumber, paymentMessage.substring(0, 4000), 'pending');
+  db.prepare('INSERT INTO orders (order_ref, user_id, items, total, delivery_method, delivery_number, payment_message, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+    .run(orderId, req.userId, JSON.stringify(items), total, deliveryMethod, deliveryNumber, paymentMessage.substring(0, 4000), 'pending');
 
-  activeOrders.set(orderId, { orderId, items, total, deliveryMethod, deliveryNumber, ws: null, createdAt: Date.now() });
+  activeOrders.set(orderId, { orderId, userId: req.userId, phone: req.phone, items, total, deliveryMethod, deliveryNumber, ws: null, createdAt: Date.now() });
 
   const itemsText = items.map(i => `  • ${i.label} (${i.category}) — KSh ${i.price}`).join('\n');
   const adminMsg =
     `🔔 NEW ORDER: ${orderId}\n` +
     `━━━━━━━━━━━━━━━━━\n` +
+    `👤 Customer: ${req.phone}\n` +
     `📦 Items:\n${itemsText}\n` +
     `━━━━━━━━━━━━━━━━━\n` +
     `💰 Total: KSh ${total.toLocaleString()}\n` +
@@ -128,6 +196,7 @@ app.post('/api/create-order', (req, res) => {
   res.json({ orderId, total });
 });
 
+// ── Telegram Bot ──
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
 bot.on('callback_query', (query) => {
