@@ -61,7 +61,6 @@ main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
 .add-btn{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
 .add-btn:hover{transform:scale(1.05);box-shadow:0 2px 12px rgba(124,58,237,.4)}
 
-/* Auth */
 .auth-box{max-width:420px;margin:40px auto;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:32px;position:relative;overflow:hidden}
 .auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--cyan))}
 .auth-box h2{color:var(--gold);margin-bottom:20px;font-size:1.4rem;text-align:center}
@@ -130,6 +129,13 @@ main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
 .error-card .sc-title{font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
 .error-card .sc-value{font-size:1rem;font-weight:700;color:var(--red)}
 
+.steps-list{display:flex;flex-direction:column;gap:16px}
+.step-item{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;transition:all .3s}
+.step-item:hover{border-color:var(--gold);transform:translateX(6px)}
+.step-num{width:36px;height:36px;min-width:36px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.step-content h4{color:var(--text);font-size:1rem;margin-bottom:4px}
+.step-content p{color:var(--muted);font-size:.85rem}
+
 footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:40px}
 @media(max-width:600px){.hero h1{font-size:2rem}.hero-logo{font-size:2.5rem}.cat-grid{grid-template-columns:1fr}header h1{font-size:1.1rem}.checkout-box{padding:20px}}
 </style>
@@ -140,7 +146,7 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
   <div class="hero-content">
     <div class="hero-logo">⚡</div>
     <h1>ZEDICIUS QURU<br>FIXED TIPS</h1>
-    <p class="subtitle">Premium Football Odds · 100% Legitimate · Trusted by Thousands</p>
+    <p class="subtitle">Welcome to Zedicius QuruFix Tips platform — are you interested in today's <strong style="color:var(--gold)">400+ correct score games</strong>?</p>
     <div class="hero-features">
       <div class="hero-feat"><span class="icon">🏆</span> 1X2 Bets</div>
       <div class="hero-feat"><span class="icon">⚽</span> Over/Under</div>
@@ -152,9 +158,44 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
       <span><strong>M-Pesa / Airtel STK Push</strong> is coming soon — hold on!</span>
     </div>
     <div class="hero-cta">
-      <button class="btn-hero" onclick="dismissHero()">🚀 Start Shopping</button>
+      <button class="btn-hero" onclick="document.getElementById('stepsPage').scrollIntoView({behavior:'smooth'})">📋 See How It Works ↓</button>
     </div>
   </div>
+</section>
+
+<section id="stepsPage" style="display:none;padding:50px 20px;max-width:700px;margin:0 auto">
+  <h2 style="text-align:center;color:var(--gold);font-size:1.8rem;margin-bottom:32px">📋 How It Works</h2>
+  <div class="steps-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content"><h4>Create Your Account</h4><p>Register with your phone number and a password. Takes 10 seconds.</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content"><h4>Browse & Add to Cart</h4><p>Pick your favourite odds from 1X2, Over/Under, GG/NGG or Monster Odds. Click <strong>+ Add</strong>.</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content"><h4>Go to Checkout</h4><p>Choose where to receive your odds — <strong>SMS</strong> or <strong>WhatsApp</strong> — and enter your number.</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-content"><h4>Make Payment</h4><p>Send the total via <strong>M-Pesa</strong> or <strong>Airtel Money</strong> to <strong>0785 639 307</strong>.</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">5</div>
+      <div class="step-content"><h4>Paste Confirmation</h4><p>Copy the full M-Pesa/Airtel SMS and paste it in the box. Click <strong>Place Order</strong>.</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">6</div>
+      <div class="step-content"><h4>Wait for Verification</h4><p>Our team checks your payment. You'll see a confirmation or rejection on screen instantly.</p></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">7</div>
+      <div class="step-content"><h4>Receive Your Odds 🎉</h4><p>Once confirmed, your odds are sent via SMS or WhatsApp within 5–15 minutes. Good luck!</p></div>
+    </div>
+  </div>
+  <button class="btn-hero" onclick="dismissHero()" style="margin-top:32px">🚀 Start Shopping Now</button>
 </section>
 
 <header id="appHeader" style="display:none">
@@ -166,7 +207,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
 </header>
 
 <main id="appMain" style="display:none">
-  <!-- SHOP -->
   <section id="shopPage" class="page active">
     <div class="cat-grid">
       <div class="cat-card">
@@ -194,7 +234,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
-  <!-- LOGIN -->
   <section id="loginPage" class="page">
     <div class="auth-box">
       <h2>🔐 Login</h2>
@@ -206,7 +245,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
-  <!-- REGISTER -->
   <section id="registerPage" class="page">
     <div class="auth-box">
       <h2>📝 Create Account</h2>
@@ -219,7 +257,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
-  <!-- CART -->
   <section id="cartPage" class="page">
     <h2 style="color:var(--gold);margin-bottom:20px">🛒 Your Cart</h2>
     <div id="cartItems"></div>
@@ -228,7 +265,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     <button class="btn btn-secondary" onclick="showPage('shop')">← Continue Shopping</button>
   </section>
 
-  <!-- CHECKOUT -->
   <section id="checkoutPage" class="page">
     <div class="checkout-box">
       <h2>💳 Checkout</h2>
@@ -266,7 +302,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
-  <!-- WAITING -->
   <section id="waitingPage" class="page">
     <div class="waiting">
       <div class="spinner-lg" id="waitSpinner"></div>
@@ -277,7 +312,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
-  <!-- CONFIRMED -->
   <section id="confirmedPage" class="page">
     <div class="result-page">
       <div class="result-icon">🎉</div>
@@ -296,7 +330,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
-  <!-- REJECTED -->
   <section id="rejectedPage" class="page">
     <div class="result-page">
       <div class="result-icon">❌</div>
@@ -322,16 +355,15 @@ let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let selectedDelivery = null;
 let ws = null, wsClosed = false, retryCount = 0, waitInterval = null, waitTimeout = null;
 
-// ── Hero ──
 function dismissHero() {
   document.getElementById('heroPage').style.display = 'none';
+  document.getElementById('stepsPage').style.display = 'none';
   document.getElementById('appHeader').style.display = 'flex';
   document.getElementById('appMain').style.display = 'block';
   document.getElementById('appFooter').style.display = 'block';
   showPage('shop');
 }
 
-// ── Navigation ──
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(name + 'Page').classList.add('active');
@@ -340,7 +372,6 @@ function showPage(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── Auth ──
 function handleAuthClick() {
   if (token) {
     localStorage.removeItem('token');
@@ -389,7 +420,6 @@ async function doRegister() {
   } catch (e) { msgEl.className = 'msg error'; msgEl.textContent = e.message; }
 }
 
-// ── Cart ──
 function addToCart(category, label, price) {
   cart.push({ category, label, price, id: Date.now() + Math.random() });
   saveCart(); updateCartBadge();
@@ -425,7 +455,6 @@ function renderCart() {
   btn.style.display = 'block';
 }
 
-// ── Checkout ──
 function goCheckout() {
   if (!token) { showPage('login'); return; }
   showPage('checkout');
@@ -488,7 +517,6 @@ async function submitOrder() {
   }
 }
 
-// ── WebSocket ──
 function connectWS(orderId) {
   if (wsClosed) return;
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -553,6 +581,7 @@ function copyPhone() {
 
 updateAuthUI();
 updateCartBadge();
+document.getElementById('stepsPage').style.display = 'block';
 </script>
 </body>
 </html>   
