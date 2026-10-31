@@ -50,7 +50,6 @@ const app = express();
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(__dirname));
 
-// ── Auth middleware ──
 function authRequired(req, res, next) {
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'Not logged in. Please login first.' });
@@ -64,7 +63,6 @@ function authRequired(req, res, next) {
   }
 }
 
-// ── Register ──
 app.post('/api/register', async (req, res) => {
   const { phone, password } = req.body;
   if (!phone || !password) return res.status(400).json({ error: 'Phone and password required' });
@@ -83,7 +81,6 @@ app.post('/api/register', async (req, res) => {
   res.json({ token, phone: cleanPhone });
 });
 
-// ── Login ──
 app.post('/api/login', async (req, res) => {
   const { phone, password } = req.body;
   if (!phone || !password) return res.status(400).json({ error: 'Phone and password required' });
@@ -99,7 +96,6 @@ app.post('/api/login', async (req, res) => {
   res.json({ token, phone: user.phone });
 });
 
-// ── WebSocket ──
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' });
 const activeOrders = new Map();
@@ -145,7 +141,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-// ── Create Order (requires login) ──
 app.post('/api/create-order', authRequired, (req, res) => {
   const { items, paymentMessage, deliveryMethod, deliveryNumber } = req.body;
   if (!items || !Array.isArray(items) || items.length === 0) return res.status(400).json({ error: 'Cart is empty' });
@@ -191,7 +186,6 @@ app.post('/api/create-order', authRequired, (req, res) => {
   res.json({ orderId, total });
 });
 
-// ── Telegram Bot ──
 const bot = new TelegramBot(BOT_TOKEN, { polling: true });
 
 bot.on('callback_query', (query) => {
@@ -240,19 +234,14 @@ bot.on('message', (msg) => {
   }
 });
 
-// ── Health ──
 app.get('/healthz', (_req, res) => res.sendStatus(200));
-
-// ── SPA fallback ──
 app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// ── Start ──
 server.listen(PORT, () => {
   console.log(`✅ Zedicius QuruFixed Tips running on port ${PORT}`);
   console.log(`🤖 Bot polling (admin: ${ADMIN_CHAT_ID})`);
 });
 
-// ── Shutdown ──
 process.on('SIGTERM', () => {
   console.log('SIGTERM. Shutting down...');
   wss.clients.forEach(ws => ws.close(1001));
