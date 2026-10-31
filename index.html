@@ -30,6 +30,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .btn-hero:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(240,192,64,.5)}
 header{background:rgba(10,10,26,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
 header h1{font-size:1.3rem;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-actions{display:flex;gap:10px;align-items:center}
 .hdr-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s;position:relative}
 .hdr-btn:hover{border-color:var(--gold);color:var(--gold)}
 .cart-badge{position:absolute;top:-6px;right:-6px;background:var(--gold);color:#000;font-size:.7rem;font-weight:800;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
@@ -47,6 +48,19 @@ main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
 .odds-row .price{color:var(--gold);font-weight:700;font-size:.9rem}
 .add-btn{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s}
 .add-btn:hover{transform:scale(1.05);box-shadow:0 2px 12px rgba(124,58,237,.4)}
+.auth-box{max-width:420px;margin:40px auto;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:32px;position:relative;overflow:hidden}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--cyan))}
+.auth-box h2{color:var(--gold);margin-bottom:20px;font-size:1.4rem;text-align:center}
+.auth-switch{text-align:center;margin-top:16px;font-size:.85rem;color:var(--muted)}
+.auth-switch a{color:var(--cyan);cursor:pointer;text-decoration:none;font-weight:600}
+.msg{padding:12px 16px;border-radius:10px;margin-top:12px;font-size:.85rem;display:none}
+.msg.error{display:block;background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
+.msg.success{display:block;background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px;font-weight:600}
+.form-group input,.form-group textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.95rem;font-family:inherit;transition:all .2s}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,192,64,.1)}
+.form-group textarea{min-height:100px;resize:vertical}
 .cart-item{display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,.02);border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
 .cart-item .info{flex:1}
 .cart-item .info .name{font-weight:600;font-size:.95rem}
@@ -67,11 +81,6 @@ main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
 .checkout-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:600px;margin:0 auto;position:relative;overflow:hidden}
 .checkout-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--cyan))}
 .checkout-box h2{color:var(--gold);margin-bottom:16px}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px;font-weight:600}
-.form-group input,.form-group textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.95rem;font-family:inherit;transition:all .2s}
-.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,192,64,.1)}
-.form-group textarea{min-height:100px;resize:vertical}
 .pay-instruction{background:rgba(245,158,11,.08);border:1px solid var(--orange);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:.9rem;line-height:1.7}
 .pay-instruction .phone{font-size:1.3rem;font-weight:800;color:var(--orange);letter-spacing:1px;display:block;margin:6px 0}
 .copy-btn{background:var(--orange);color:#000;border:none;border-radius:6px;padding:3px 10px;font-size:.75rem;cursor:pointer;font-weight:700;margin-left:8px}
@@ -106,8 +115,6 @@ main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
 .step-num{width:36px;height:36px;min-width:36px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#000;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .step-content h4{color:var(--text);font-size:1rem;margin-bottom:4px}
 .step-content p{color:var(--muted);font-size:.85rem}
-.msg{padding:12px 16px;border-radius:10px;margin-top:12px;font-size:.85rem;display:none}
-.msg.error{display:block;background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
 footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:40px}
 @media(max-width:600px){.hero h1{font-size:2rem}.hero-logo{font-size:2.5rem}.cat-grid{grid-template-columns:1fr}header h1{font-size:1.1rem}.checkout-box{padding:20px}}
 </style>
@@ -133,19 +140,23 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
 <section id="stepsPage" style="display:none;padding:50px 20px;max-width:700px;margin:0 auto">
   <h2 style="text-align:center;color:var(--gold);font-size:1.8rem;margin-bottom:32px">📋 How It Works</h2>
   <div class="steps-list">
-    <div class="step-item"><div class="step-num">1</div><div class="step-content"><h4>Browse & Add to Cart</h4><p>Pick your favourite odds. Click <strong>+ Add</strong>.</p></div></div>
-    <div class="step-item"><div class="step-num">2</div><div class="step-content"><h4>Go to Checkout</h4><p>Choose <strong>SMS</strong> or <strong>WhatsApp</strong> delivery and enter your number.</p></div></div>
-    <div class="step-item"><div class="step-num">3</div><div class="step-content"><h4>Make Payment</h4><p>Send the total via <strong>M-Pesa</strong> or <strong>Airtel</strong> to <strong>0785 639 307</strong>.</p></div></div>
-    <div class="step-item"><div class="step-num">4</div><div class="step-content"><h4>Paste Confirmation</h4><p>Copy the full SMS and paste it. Click <strong>Place Order</strong>.</p></div></div>
-    <div class="step-item"><div class="step-num">5</div><div class="step-content"><h4>Wait for Verification</h4><p>Our team checks your payment. Result appears on screen instantly.</p></div></div>
-    <div class="step-item"><div class="step-num">6</div><div class="step-content"><h4>Receive Your Odds 🎉</h4><p>Odds sent via SMS or WhatsApp within 5–15 minutes. Good luck!</p></div></div>
+    <div class="step-item"><div class="step-num">1</div><div class="step-content"><h4>Create Your Account</h4><p>Register with your phone number and a password. Takes 10 seconds.</p></div></div>
+    <div class="step-item"><div class="step-num">2</div><div class="step-content"><h4>Browse & Add to Cart</h4><p>Pick your favourite odds. Click <strong>+ Add</strong>.</p></div></div>
+    <div class="step-item"><div class="step-num">3</div><div class="step-content"><h4>Go to Checkout</h4><p>Choose <strong>SMS</strong> or <strong>WhatsApp</strong> delivery and enter your number.</p></div></div>
+    <div class="step-item"><div class="step-num">4</div><div class="step-content"><h4>Make Payment</h4><p>Send the total via <strong>M-Pesa</strong> or <strong>Airtel</strong> to <strong>0785 639 307</strong>.</p></div></div>
+    <div class="step-item"><div class="step-num">5</div><div class="step-content"><h4>Paste Confirmation</h4><p>Copy the full SMS and paste it. Click <strong>Place Order</strong>.</p></div></div>
+    <div class="step-item"><div class="step-num">6</div><div class="step-content"><h4>Wait for Verification</h4><p>Our team checks your payment. Result appears on screen instantly.</p></div></div>
+    <div class="step-item"><div class="step-num">7</div><div class="step-content"><h4>Receive Your Odds 🎉</h4><p>Odds sent via SMS or WhatsApp within 5–15 minutes. Good luck!</p></div></div>
   </div>
   <button class="btn-hero" onclick="dismissHero()" style="margin-top:32px">🚀 Start Shopping Now</button>
 </section>
 
 <header id="appHeader" style="display:none">
   <h1>⚡ Zedicius Quru</h1>
-  <div style="display:flex;gap:10px"><button class="hdr-btn" onclick="showPage('cart')">🛒 Cart<span class="cart-badge" id="cartBadge" style="display:none">0</span></button></div>
+  <div class="hdr-actions">
+    <button class="hdr-btn" onclick="showPage('cart')">🛒 Cart<span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
+    <button class="hdr-btn" id="authBtn" onclick="handleAuthClick()">Login</button>
+  </div>
 </header>
 
 <main id="appMain" style="display:none">
@@ -172,11 +183,34 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
     </div>
   </section>
 
+  <section id="loginPage" class="page">
+    <div class="auth-box">
+      <h2>🔐 Login</h2>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="loginPhone" placeholder="07XXXXXXXX" maxlength="13"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Your password"></div>
+      <div id="loginMsg" class="msg"></div>
+      <button class="btn btn-primary" onclick="doLogin()">Login</button>
+      <div class="auth-switch">Don't have an account? <a onclick="showPage('register')">Register</a></div>
+    </div>
+  </section>
+
+  <section id="registerPage" class="page">
+    <div class="auth-box">
+      <h2>📝 Create Account</h2>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="regPhone" placeholder="07XXXXXXXX" maxlength="13"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Min 6 characters"></div>
+      <div class="form-group"><label>Confirm Password</label><input type="password" id="regPass2" placeholder="Repeat password"></div>
+      <div id="regMsg" class="msg"></div>
+      <button class="btn btn-primary" onclick="doRegister()">Create Account</button>
+      <div class="auth-switch">Already have an account? <a onclick="showPage('login')">Login</a></div>
+    </div>
+  </section>
+
   <section id="cartPage" class="page">
     <h2 style="color:var(--gold);margin-bottom:20px">🛒 Your Cart</h2>
     <div id="cartItems"></div>
     <div class="cart-total" id="cartTotal" style="display:none"></div>
-    <button class="btn btn-purple" id="checkoutBtn" style="display:none" onclick="showPage('checkout')">Proceed to Checkout →</button>
+    <button class="btn btn-purple" id="checkoutBtn" style="display:none" onclick="goCheckout()">Proceed to Checkout →</button>
     <button class="btn btn-secondary" onclick="showPage('shop')">← Continue Shopping</button>
   </section>
 
@@ -237,6 +271,7 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-
 
 <script>
 const PHONE="0785639307";
+let token=localStorage.getItem('token')||null;
 let cart=JSON.parse(localStorage.getItem('cart')||'[]');
 let selectedDelivery=null;
 let ws=null,wsClosed=false,retryCount=0,waitInterval=null,waitTimeout=null;
@@ -256,6 +291,42 @@ function showPage(name){
   if(name==='checkout')renderCheckout();
   window.scrollTo({top:0,behavior:'smooth'});
 }
+function handleAuthClick(){
+  if(token){localStorage.removeItem('token');token=null;updateAuthUI();showPage('shop');}
+  else showPage('login');
+}
+function updateAuthUI(){document.getElementById('authBtn').textContent=token?'Logout':'Login';}
+
+async function doLogin(){
+  const phone=document.getElementById('loginPhone').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const msgEl=document.getElementById('loginMsg');
+  if(!phone||!pass){msgEl.className='msg error';msgEl.textContent='Fill in all fields';return;}
+  try{
+    const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,password:pass})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error);
+    token=data.token;localStorage.setItem('token',token);
+    updateAuthUI();showPage('shop');
+  }catch(e){msgEl.className='msg error';msgEl.textContent=e.message;}
+}
+
+async function doRegister(){
+  const phone=document.getElementById('regPhone').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const pass2=document.getElementById('regPass2').value;
+  const msgEl=document.getElementById('regMsg');
+  if(!phone||!pass||!pass2){msgEl.className='msg error';msgEl.textContent='Fill in all fields';return;}
+  if(pass!==pass2){msgEl.className='msg error';msgEl.textContent='Passwords do not match';return;}
+  try{
+    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,password:pass})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error);
+    token=data.token;localStorage.setItem('token',token);
+    updateAuthUI();showPage('shop');
+  }catch(e){msgEl.className='msg error';msgEl.textContent=e.message;}
+}
+
 function addToCart(category,label,price){cart.push({category,label,price,id:Date.now()+Math.random()});saveCart();updateCartBadge();}
 function removeFromCart(id){cart=cart.filter(i=>i.id!==id);saveCart();updateCartBadge();renderCart();}
 function saveCart(){localStorage.setItem('cart',JSON.stringify(cart));}
@@ -267,6 +338,7 @@ function renderCart(){
   const total=cart.reduce((s,i)=>s+i.price,0);
   t.style.display='block';t.innerHTML=`Total: <strong>KSh ${total.toLocaleString()}</strong>`;btn.style.display='block';
 }
+function goCheckout(){if(!token){showPage('login');return;}showPage('checkout');}
 function selectDelivery(method){selectedDelivery=method;document.getElementById('optSMS').classList.toggle('selected',method==='SMS');document.getElementById('optWhatsApp').classList.toggle('selected',method==='WhatsApp');document.getElementById('deliveryNumGroup').style.display='block';}
 function renderCheckout(){
   const total=cart.reduce((s,i)=>s+i.price,0);
@@ -288,9 +360,9 @@ async function submitOrder(){
   if(!msg){msgEl.className='msg error';msgEl.textContent='Paste the payment confirmation message';return;}
   btn.disabled=true;btn.innerHTML='⏳ Placing Order...';
   try{
-    const res=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart,paymentMessage:msg,deliveryMethod:selectedDelivery,deliveryNumber:dNum})});
+    const res=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({items:cart,paymentMessage:msg,deliveryMethod:selectedDelivery,deliveryNumber:dNum})});
     const data=await res.json();
-    if(!res.ok)throw new Error(data.error);
+    if(!res.ok){if(res.status===401){token=null;localStorage.removeItem('token');updateAuthUI();showPage('login');return;}throw new Error(data.error);}
     connectWS(data.orderId);startTimer();showPage('waiting');
   }catch(e){msgEl.className='msg error';msgEl.textContent=e.message;btn.disabled=false;btn.innerHTML='✅ Place Order';}
 }
@@ -315,6 +387,8 @@ function cancelWait(){wsClosed=true;stopTimer();if(ws){ws.close();ws=null;}showP
 function goBackToCheckout(){wsClosed=true;stopTimer();if(ws){ws.close();ws=null;}showPage('checkout');}
 function resetToShop(){wsClosed=true;stopTimer();if(ws){ws.close();ws=null;}retryCount=0;showPage('shop');}
 function copyPhone(){navigator.clipboard.writeText(PHONE).then(()=>{const b=document.querySelector('.copy-btn');b.textContent='✓ Copied!';setTimeout(()=>b.textContent='📋 Copy',2000);});}
+
+updateAuthUI();
 updateCartBadge();
 document.getElementById('stepsPage').style.display='block';
 </script>
