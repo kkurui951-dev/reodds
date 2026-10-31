@@ -3,7 +3,7 @@ const http = require('http');
 const { WebSocketServer, WebSocket } = require('ws');
 const TelegramBot = require('node-telegram-bot-api');
 const Database = require('better-sqlite3');
-const bcrypt = require('bcryptjs');   
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 
@@ -209,14 +209,20 @@ bot.on('callback_query', (query) => {
       order.ws.send(JSON.stringify({ type: 'confirmed', orderId, deliveryMethod: order.deliveryMethod, deliveryNumber: order.deliveryNumber, total: order.total }));
     }
     db.prepare("UPDATE orders SET status = 'confirmed' WHERE order_ref = ?").run(orderId);
-    bot.editMessageText(`✅ CONFIRMED: ${orderId}\nPayment verified.\nOdds will be sent via ${order.deliveryMethod} to ${order.deliveryNumber}.`, { chat_id: ADMIN_CHAT_ID, message_id: query.message.message_id }).catch(() => {});
+    bot.editMessageText(
+      `✅ CONFIRMED: ${orderId}\nPayment verified.\nOdds will be sent via ${order.deliveryMethod} to ${order.deliveryNumber}.`,
+      { chat_id: ADMIN_CHAT_ID, message_id: query.message.message_id }
+    ).catch(() => {});
     bot.answerCallbackQuery(query.id, { text: '✅ Confirmed' });
   } else if (action === 'wrong') {
     if (order.ws && order.ws.readyState === WebSocket.OPEN) {
       order.ws.send(JSON.stringify({ type: 'rejected', orderId, expectedAmount: order.total }));
     }
     db.prepare("UPDATE orders SET status = 'rejected' WHERE order_ref = ?").run(orderId);
-    bot.editMessageText(`❌ REJECTED: ${orderId}\nPayment incorrect. User notified to try again.`, { chat_id: ADMIN_CHAT_ID, message_id: query.message.message_id }).catch(() => {});
+    bot.editMessageText(
+      `❌ REJECTED: ${orderId}\nPayment incorrect. User notified to try again.`,
+      { chat_id: ADMIN_CHAT_ID, message_id: query.message.message_id }
+    ).catch(() => {});
     bot.answerCallbackQuery(query.id, { text: '❌ Rejected' });
   }
 
@@ -226,18 +232,27 @@ bot.on('callback_query', (query) => {
 bot.on('message', (msg) => {
   if (msg.from.id !== ADMIN_CHAT_ID) return;
   if ((msg.text || '').trim() === '/start') {
-    bot.sendMessage(msg.chat.id, '👋 Zedicius QuruFixed Tips Bot\n\nYou will receive orders here.\nClick ✅ Correct or ❌ Wrong to respond.');
+    bot.sendMessage(msg.chat.id,
+      '👋 Zedicius QuruFixed Tips Bot\n\n' +
+      'You will receive orders here.\n' +
+      'Click ✅ Correct or ❌ Wrong to respond to the user.'
+    );
   }
 });
 
+// ── Health ──
 app.get('/healthz', (_req, res) => res.sendStatus(200));
+
+// ── SPA fallback ──
 app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
+// ── Start ──
 server.listen(PORT, () => {
   console.log(`✅ Zedicius QuruFixed Tips running on port ${PORT}`);
   console.log(`🤖 Bot polling (admin: ${ADMIN_CHAT_ID})`);
 });
 
+// ── Shutdown ──
 process.on('SIGTERM', () => {
   console.log('SIGTERM. Shutting down...');
   wss.clients.forEach(ws => ws.close(1001));
